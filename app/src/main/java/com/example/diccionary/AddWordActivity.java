@@ -1,12 +1,11 @@
 package com.example.diccionary;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.PrintStream;
 
@@ -23,25 +22,31 @@ public class AddWordActivity extends AppCompatActivity {
         String newWord = ((EditText)findViewById(R.id.the_new_word)).getText().toString();
         String newDefn = ((EditText)findViewById(R.id.the_new_definition)).getText().toString();
 
-        PrintStream printStream = null;
+        if (newWord.compareTo("") != 0) {
+            PrintStream printStream = null;
 
-        try {
+            try {
 
-            printStream = new PrintStream(openFileOutput("added_words.txt", MODE_PRIVATE | MODE_APPEND));
-            printStream.println(newWord + "\t" + newDefn);
-            System.out.println("Saved: " + newWord + " ---> " + newDefn);
+                printStream = new PrintStream(openFileOutput("added_words.txt", MODE_PRIVATE | MODE_APPEND));
+                printStream.println(newWord + "\t" + newDefn);
+                System.out.println("Saved: " + newWord + " ---> " + newDefn);
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            if(printStream != null)
-                printStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (printStream != null)
+                    printStream.close();
+            }
+
+            Intent goBack = new Intent();
+            goBack.putExtra("newword", newWord);
+            goBack.putExtra("newdefn", newDefn);
+            setResult(RESULT_OK, goBack);
+            finish();
+        } else {
+            Intent goBack = new Intent();
+            setResult(RESULT_CANCELED, goBack);
+            finish();
         }
-
-        Intent goBack = new Intent();
-        goBack.putExtra("newword",newWord);
-        goBack.putExtra("newdefn",newDefn);
-        setResult(RESULT_OK,goBack);
-        finish();
     }
 }
